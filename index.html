@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Photographer Portfolio</title>
+
+  <!-- Latest compiled and minified Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- FontAwesome Library -->
+  <link href="assets/vendor/fontawesome/css/all.css" rel="stylesheet">
+
+  <!-- Custom Css -->
+  <link href="assets/css/style.css" rel="stylesheet">    
+</head>
+<body>
+  <div class="container overflow-hidden">
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="row p-3 bg-light rounded-lg">
+          <div class="col-md-3" id="profile-picture"></div>
+          <div class="col-md-6">
+             <h2 id="photographer-name"></h2>
+             <h6 class="text-secondary">Bio</h6>
+             <p id="photographer-bio" class="text-secondary"></p>
+          </div>
+          <div class="col-md-3">
+            <div class="container mt-5">
+              <h6 class="text-secondary">Phone</h6>
+              <p id="photographer-phone" class="text-pink"></p>
+              <h6 class="text-secondary">Email</h6>
+              <p id="photographer-email" class="text-pink"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3" id="album-container">
+    </div>
+  </div>
+  
+  <!-- Custom Javascript -->
+  <script type="text/javascript" src="assets/js/main.js"></script>
+</body>
+</html>
