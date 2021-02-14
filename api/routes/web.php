@@ -16,3 +16,10 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// Photographers
+$router->get('photographers', 'PhotographerController@index');
+$router->post('photographers', 'PhotographerController@store');
+$router->get('photographers/{id}', 'PhotographerController@show');
+$router->post('photographers/{id}', 'PhotographerController@update');
+$router->delete('photographers/{id}', 'PhotographerController@destroy');
