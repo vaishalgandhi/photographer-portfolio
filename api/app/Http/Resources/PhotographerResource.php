@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\AlbumResource;
 
 class PhotographerResource extends JsonResource
 {
@@ -22,7 +23,7 @@ class PhotographerResource extends JsonResource
             'phone'         => $this->phone,
             'bio'           => $this->bio,
             'profile_picture' => $this->profile_picture,
-            'album' => []
+            'album' => AlbumResource::collection($this->album)
         ];
     }
 }
