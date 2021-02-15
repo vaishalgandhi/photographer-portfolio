@@ -12,15 +12,8 @@ class Album extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'image', 'date', 'featured', 'created_at', 'updated_at', 'deleted_at'
+        'photographer_id', 'title', 'description', 'img', 'date', 'featured', 'created_at', 'updated_at', 'deleted_at'
     ];
-
-    /**
-     * The attributes that are date formated.
-     *
-     * @var array
-     */
-    protected $dates = ["date"];
 
     /**
      * The attributes validation rules.
@@ -30,7 +23,7 @@ class Album extends Model
     public static $rules = [
         "title" => "required",
         "description" => "required",
-        "image" => "required"
+        "img" => "required",
         "date" => "required|date",
     ];
 

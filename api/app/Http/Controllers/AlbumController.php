@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\AlbumsRepository;
 use App\Repositories\PhotographersRepository;
-use App\Http\Resources\PhotographerResource;
-use App\Models\Photographer;
+use App\Http\Resources\AlbumResource;
+use App\Models\Album;
 use Illuminate\Http\Request;
 use Validator;
 
-class PhotographerController extends Controller
+class AlbumController extends Controller
 {
     /**
      * Associated Repository.
@@ -16,22 +17,28 @@ class PhotographerController extends Controller
     protected $repository;
 
     /**
+     * Photographer Repository.
+     */
+    protected $photographerRepository;
+
+    /**
      * Associated Model.
      */
-    const MODEL = Photographer::class;
+    const MODEL = Album::class;
 
     /**
      * __construct.
      *
      * @param $repository
      */
-    public function __construct(PhotographersRepository $repository)
+    public function __construct(AlbumsRepository $repository, PhotographersRepository $photographerRepository)
     {
         $this->repository = $repository;
+        $this->photographerRepository = $photographerRepository;
     }
 
     /**
-     * Return the list of photographers.
+     * Return the list of Albums.
      *
      * @param  \Illuminate\Http\Request $request
      *
@@ -42,11 +49,11 @@ class PhotographerController extends Controller
         $list = $this->repository->all();
 
         return $this->setStatusCode(200)
-            ->respond(PhotographerResource::collection($list));
+            ->respond(AlbumResource::collection($list));
     }
 
      /**
-     * Create Photographer.
+     * Create Album.
      *
      * @param Request $request
      *
@@ -61,10 +68,16 @@ class PhotographerController extends Controller
         if ($validation->fails()) {
             return $this->throwValidation($validation->messages()->first());
         }
+        
+        $photographer = $this->photographerRepository->find($request->photographer_id);
 
-        $photographer = $this->repository->create($request->all());
+        if(blank($photographer)) {
+            return $this->respondNotFound("Photographer not found.");
+        }
 
-        if($photographer == true) {
+        $album = $this->repository->create($request->all());
+
+        if($album == true) {
             return $this->setStatusCode(200)
                 ->respond(["message" => "Record created successfully."]);
         } else {
@@ -73,7 +86,7 @@ class PhotographerController extends Controller
     }
 
     /**
-     * Return the specified photographer.
+     * Return the specified album.
      *
      * @param Integer $id
      *
@@ -81,18 +94,18 @@ class PhotographerController extends Controller
      */
     public function show($id)
     {
-        $photographer = $this->repository->find($id);
+        $album = $this->repository->find($id);
         
-        if(blank($photographer)) {
+        if(blank($album)) {
             return $this->respondNotFound("Record not found.");
         }
         
         return $this->setStatusCode(200)
-            ->respond(new PhotographerResource($photographer));
+            ->respond(new AlbumResource($album));
     }
 
     /**
-     * Update the specified record.
+     * Update the specified album.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  Integer $id
@@ -104,8 +117,7 @@ class PhotographerController extends Controller
         $model = self::MODEL;
         
         $validationRoles = $model::$rules;
-        $validationRoles["email"] = 'email|unique:photographers,email,'.$id;
-        $validationRoles["profile_picture"] = 'nullable';
+        $validationRoles["img"] = 'nullable';
 
         $validation = Validator::make($request->all(), $validationRoles);
 
@@ -113,15 +125,21 @@ class PhotographerController extends Controller
             return $this->throwValidation($validation->messages()->first());
         }
 
-        $photographer = $this->repository->find($id);
+        $photographer = $this->photographerRepository->find($request->photographer_id);
 
         if(blank($photographer)) {
+            return $this->respondNotFound("Photographer not found.");
+        }
+        
+        $album = $this->repository->find($id);
+
+        if(blank($album)) {
             return $this->respondNotFound("Record not found.");
         }
 
-        $photographer = $this->repository->update($photographer, $request->all());
+        $album = $this->repository->update($album, $request->all());
 
-        if($photographer == true) {
+        if($album == true) {
             return $this->setStatusCode(200)
                 ->respond(["message" => "Record updated successfully."]);
         } else {
@@ -130,7 +148,7 @@ class PhotographerController extends Controller
     }
 
     /**
-     * Delete the specified record.
+     * Delete the specified album.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  Integer $id
@@ -139,15 +157,15 @@ class PhotographerController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $photographer = $this->repository->find($id);
+        $album = $this->repository->find($id);
 
-        if(blank($photographer)) {
+        if(blank($album)) {
             return $this->respondNotFound("Record not found.");
         }
 
-        $photographer = $this->repository->delete($photographer);
+        $album = $this->repository->delete($album);
 
-        if($photographer == true) {
+        if($album == true) {
             return $this->setStatusCode(200)
                 ->respond(["message" => "Record deleted successfully."]);
         } else {

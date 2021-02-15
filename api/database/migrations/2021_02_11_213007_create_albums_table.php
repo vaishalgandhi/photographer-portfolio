@@ -20,7 +20,7 @@ class CreateAlbumsTable extends Migration
             $table->string('description', 200);
             $table->string('img');
             $table->date('date');
-            $table->boolean('featured');
+            $table->boolean('featured')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

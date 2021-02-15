@@ -39,7 +39,7 @@ class PhotographersRepository extends BaseRepository
     {
         $model = self::MODEL;
 
-        $input["profile_picture"] = $this->uploadProfilePicture($input["profile_picture"]);
+        $input["profile_picture"] = uploadImage($input["profile_picture"], 'images/profile_picture');
 
         if ($model::create($input)) {
             return true;
@@ -59,7 +59,7 @@ class PhotographersRepository extends BaseRepository
     public function update($photographer, array $input)
     {
         if(array_key_exists('profile_picture', $input)) {
-            $input["profile_picture"] = $this->uploadProfilePicture($input["profile_picture"]);
+            $input["profile_picture"] = uploadImage($input["profile_picture"], 'images/profile_picture');
         }
 
         if ($photographer->update($input)) {
@@ -83,32 +83,5 @@ class PhotographersRepository extends BaseRepository
         }
 
         return false;
-    }
-
-    /**
-     * Uploads profile picture
-     * 
-     * @param Object $file
-     *
-     * @return string
-     */
-    public function uploadProfilePicture($file)
-    {
-        // Get filename with the extension
-        $filenameWithExt = $file->getClientOriginalName();
-
-        //Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        
-        // Get just ext
-        $extension = $file->getClientOriginalExtension();
-        
-        // Filename to store
-        $fileNameToStore = $filename.'_'.time().'.'.$extension;
-        
-        // Upload Image
-        $path = $file->move('profile_picture',$fileNameToStore);
-
-        return $fileNameToStore; 
     }
 }
